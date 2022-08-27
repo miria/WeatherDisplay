@@ -25,5 +25,5 @@ This program requires the following Python dependencies:
 
 ![Display](display.jpg)
 
-See the [project page]() for more information on how to build this device.
+See the [project page](https://grunick.com/raspberry-pi-weather-display/) for more information on how to build this device.
 
