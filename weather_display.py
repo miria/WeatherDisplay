@@ -396,7 +396,7 @@ class WeatherFormatter:
     def format_wind_speed(self, speed, degree, label=""):
         # Find the closest cardinal direction for the wind directions defined.
         index = round(degree / (360.0 / len(self.directions)))
-        return "%s %d %s %s" % (label, speed, self._wind_unit, self.directions[(index % 16)])
+        return "%s %d %s %s" % (label, speed, self._wind_unit, self.directions[(index % len(self.directions))])
 
     def format_temp(self, temp, label=""):
         return "%s %d %s" % (label, temp, self._temp_unit)
