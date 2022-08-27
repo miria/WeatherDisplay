@@ -435,33 +435,26 @@ class WeatherImageSelector:
     def __init__(self, config):
         self._image_dir = config['icons']['image_dir']
         self._mapping_file = config['icons']['mapping_file']
-        self._image_set = config['icons']['image_set']
         self._color = config['icons']['image_color']
         self._svg_dir = config.get('icons', 'svg_dir', fallback=None)
         self._init_images()
 
     def _init_images(self):
         print("Starting image initialization.")
-        if self._image_set not in ['light', 'dark', 'custom']:
-            print("Invalid image_set value - choose light, dark, or custom")
-            sys.exit(1)
 
-        path = os.path.join(self._image_dir, self._image_set)
-        if self._image_set == 'custom':
-            # Custom color images are generated from base SVG images. Check that the SVG
-            # image directory exists.
-            self._color = get_hex(self._color)
-            dir_name = self._color
-            if not os.path.exists(self._svg_dir):
-                print("Invalid path for SVG images: ", self._svg_dir)
-                sys.exit(1)
-            path = os.path.join(self._image_dir, dir_name)
-            if not os.path.exists(path):
-                os.mkdir(path)
-                print("Created image dir ", path)
-        elif self._is_image_dir(path):
-            print("Invalid image directory ", self._image_dir)
+        if not os.path.exists(self._image_dir):
+            os.mkdir(self._image_dir)
+        # Custom color images are generated from base SVG images. Check that the SVG
+        # image directory exists.
+        self._color = get_hex(self._color)
+        dir_name = self._color
+        if not os.path.exists(self._svg_dir):
+            print("Invalid path for SVG images: ", self._svg_dir)
             sys.exit(1)
+        path = os.path.join(self._image_dir, dir_name)
+        if not os.path.exists(path):
+            os.mkdir(path)
+            print("Created image dir ", path)
         self._image_dir = path
 
         mappings = {}
@@ -482,9 +475,6 @@ class WeatherImageSelector:
         print("Images initialized.")
         self._initialized = True
 
-    def _is_image_dir(self, path):
-        return os.path.exists(path) and len([f for f in os.listdir(path) if f.endswith(".png")]) > 0
-
     def has_image(self, condition_id, condition_time):
         if not self._initialized:
             return False
@@ -496,7 +486,7 @@ class WeatherImageSelector:
         return True
 
     def _maybe_generate_custom_image(self, path, filename):
-        if self._image_set == 'custom' and not os.path.exists(path):
+        if not os.path.exists(path):
             # Convert the SVG image to a PNG image in the requested color and store it in the color's image directory.
             with codecs.open(os.path.join(self._svg_dir, filename.replace(".png", ".svg")), encoding='utf-8',
                              errors='ignore') as f:
