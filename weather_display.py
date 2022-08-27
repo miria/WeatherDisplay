@@ -379,7 +379,7 @@ class TextSprite(pygame.sprite.Sprite):
 class WeatherFormatter:
     """Class for formatting weather data for display"""
 
-    directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
     def __init__(self, config):
         self._time_format = config['location']['time_format']
@@ -394,7 +394,7 @@ class WeatherFormatter:
             self._wind_unit = "mph"
 
     def format_wind_speed(self, speed, degree, label=""):
-        # Find the closest cardinal direction for the 16 wind directions defined.
+        # Find the closest cardinal direction for the wind directions defined.
         index = round(degree / (360.0 / len(self.directions)))
         return "%s %d %s %s" % (label, speed, self._wind_unit, self.directions[(index % 16)])
 
