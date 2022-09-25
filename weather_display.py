@@ -549,7 +549,7 @@ class WeatherDataFetcher:
 
     def _fetch_url(self, url):
         try:
-            handler = urllib.request.urlopen(url)
+            handler = urllib.request.urlopen(url, timeout=30)
             return json.loads(handler.read())
         except Exception as e:
             print("Error fetching URL:", e)
@@ -623,7 +623,7 @@ class WeatherDataFetcher:
 
     def _fetch_internet_status(self):
         try:
-            urllib.request.urlopen('http://google.com')
+            urllib.request.urlopen('http://google.com', timeout=30)
             self.internet_active = True
         except Exception as e:
             print("Error fetching internet status: ", e)
